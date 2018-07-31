@@ -8,23 +8,25 @@ with open('vote_industry.csv','w',encoding='utf8') as f:
     for co in codelist:
         code= '0000000'+str(co)
         code = code[-6:]
-        ind = starindustry.find_one({'code':code})
-        pro = starproduct.find_one({'code': code})
-        if not ind:
+        indu = starindustry.find_one({'code':code},projection={'code':0,'_id':0})
+        prod = starproduct.find_one({'code': code},projection={'code':0,'_id':0})
+        if not indu:
             continue
+        ind = sorted(indu.items(), key=lambda d: float(d[1].strip('%')), reverse=True)
+        pro = sorted(prod.items(), key=lambda d: float(d[1].strip('%')), reverse=True)
         # print(ind)
+        # exit()
         # print(pro)
         print(code)
         ss = code + ',' 
         n1 ,n2 = 0,0
-        for k,v in ind.items():
-            # import pdb;pdb.set_trace()
-            if k =='_id' or k == 'code':
-                continue
+        for it in ind:    
+            k, v = it[0], it[1] 
             n1 +=1
             if n1 > 3:
                 break
             ss+=str(k) +', '+str(v)+', '
+
         if n1 ==0:
             ss+='-,-,-,-,-,-,'
         if n1 ==1:
@@ -32,10 +34,9 @@ with open('vote_industry.csv','w',encoding='utf8') as f:
         if n1 ==2:
             ss+='-,-,'
         ss+='|,'
-        for k,v in pro.items():
-            if k =='_id' or k == 'code':
-                continue
 
+        for it in pro:  
+            k, v = it[0], it[1]           
             n2 +=1
             if n2 > 3:
                 break
