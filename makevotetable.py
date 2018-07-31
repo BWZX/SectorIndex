@@ -8,8 +8,8 @@ with open('vote_industry.csv','w',encoding='utf8') as f:
     for co in codelist:
         code= '0000000'+str(co)
         code = code[-6:]
-        ind = starindustry.find({'code':code})
-        pro = starproduct.find({'code': code})
+        ind = starindustry.find_one({'code':code})
+        pro = starproduct.find_one({'code': code})
         ss = code + ',' 
         n1 ,n2 = 0,0
         for k,v in enumerate(ind):
